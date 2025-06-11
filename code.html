@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do List</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #f8c6d6, #b2e4f5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding: 40px 20px;
+      color: #333;
+    }
+
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ff69b4;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      margin: 5px 0;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #87ceeb;
+    }
+
+    input[type="datetime-local"] {
+      width: 100%;
+      margin-top: 10px;
+      border: 2px solid #87ceeb;
+    }
+
+    .add-btn {
+      background-color: #ff69b4;
+      color: white;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .add-btn:hover {
+      background-color: #ff85c1;
+    }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    .task {
+      background-color: #f0f8ff;
+      border: 1px solid #87ceeb;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .task.completed {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+
+    .task span {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    .task time {
+      font-size: 0.8rem;
+      color: #555;
+      display: block;
+    }
+
+    .task-buttons button {
+      margin-left: 5px;
+      background-color: #87ceeb;
+      color: white;
+      cursor: pointer;
+    }
+
+    .task-buttons button:hover {
+      background-color: #6fbfd9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Enter a task" />
+    <input type="datetime-local" id="taskDate" />
+    <button class="add-btn" onclick="addTask()">Add Task</button>
+    <ul id="taskList" class="task-list"></ul>
+  </div>
+
+  <script>
+    const taskList = document.getElementById("taskList");
+
+    function addTask() {
+      const taskText = document.getElementById("taskInput").value.trim();
+      const taskDate = document.getElementById("taskDate").value;
+
+      if (!taskText) return alert("Please enter a task.");
+
+      const li = document.createElement("li");
+      li.className = "task";
+      li.innerHTML = `
+        <span>${taskText}<time>${taskDate ? `⏰ ${new Date(taskDate).toLocaleString()}` : ""}</time></span>
+        <div class="task-buttons">
+          <button onclick="toggleComplete(this)">✔</button>
+          <button onclick="editTask(this)">✏️</button>
+          <button onclick="deleteTask(this)">🗑</button>
+        </div>
+      `;
+      taskList.appendChild(li);
+
+      document.getElementById("taskInput").value = "";
+      document.getElementById("taskDate").value = "";
+    }
+
+    function toggleComplete(btn) {
+      const task = btn.closest(".task");
+      task.classList.toggle("completed");
+    }
+
+    function deleteTask(btn) {
+      const task = btn.closest(".task");
+      task.remove();
+    }
+
+    function editTask(btn) {
+      const task = btn.closest(".task");
+      const text = task.querySelector("span").childNodes[0].nodeValue.trim();
+      const newTask = prompt("Edit your task:", text);
+      if (newTask !== null && newTask.trim() !== "") {
+        task.querySelector("span").childNodes[0].nodeValue = newTask.trim() + " ";
+      }
+    }
+  </script>
+</body>
+</html>
